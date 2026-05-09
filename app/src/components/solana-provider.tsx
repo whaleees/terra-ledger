@@ -7,13 +7,14 @@ import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { UnsafeBurnerWalletAdapter } from "@solana/wallet-adapter-unsafe-burner";
 import { useMemo } from "react";
 import "@solana/wallet-adapter-react-ui/styles.css";
+import { LOCAL_RPC_URL } from "@/lib/constants";
 
 export default function SolanaProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const endpoint = process.env.NEXT_PUBLIC_RPC_URL!;
+  const endpoint = process.env.NEXT_PUBLIC_RPC_URL ?? LOCAL_RPC_URL;
   const wallets = useMemo(() => [new UnsafeBurnerWalletAdapter()], []);
   return (
     <ConnectionProvider endpoint={endpoint}>

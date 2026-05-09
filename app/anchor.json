@@ -1,5 +1,5 @@
 {
-  "address": "BLEw7o5excmgRLfLp24TdUgzYKkXL6s6oYxrG3SNvKxg",
+  "address": "2HZmbrh7agvx2M2z7PjY8U97fpXGuVTouVeVJRvDTXnq",
   "metadata": {
     "name": "anchor",
     "version": "0.1.0",
@@ -8,51 +8,73 @@
   },
   "instructions": [
     {
-      "name": "add_trustee",
+      "name": "add_delegate",
       "discriminator": [
-        157,
-        160,
-        215,
-        252,
-        120,
-        158,
-        153,
-        191
+        3,
+        67,
+        128,
+        218,
+        69,
+        139,
+        53,
+        88
       ],
       "accounts": [
         {
-          "name": "patient",
+          "name": "owner_authority",
           "writable": true,
           "signer": true
         },
         {
-          "name": "trustee",
+          "name": "owner",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  119,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner_authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "delegate",
           "signer": true
         },
         {
-          "name": "trustee_account",
+          "name": "delegate_account",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  116,
-                  114,
-                  117,
-                  115,
-                  116,
+                  100,
                   101,
+                  108,
+                  101,
+                  103,
+                  97,
+                  116,
                   101
                 ]
               },
               {
                 "kind": "account",
-                "path": "patient"
+                "path": "owner_authority"
               },
               {
                 "kind": "account",
-                "path": "trustee"
+                "path": "delegate"
               }
             ]
           }
@@ -65,22 +87,22 @@
       "args": []
     },
     {
-      "name": "create_record",
+      "name": "create_document",
       "discriminator": [
-        116,
-        124,
-        63,
-        58,
-        126,
-        204,
-        178,
-        10
+        108,
+        119,
+        64,
+        32,
+        231,
+        136,
+        51,
+        42
       ],
       "accounts": [
         {
           "name": "uploader",
           "docs": [
-            "Hospital signer (initiator / fee payer on the client)"
+            "Notary signer (initiator / fee payer on the client)"
           ],
           "writable": true,
           "signer": true
@@ -88,7 +110,7 @@
         {
           "name": "payer",
           "docs": [
-            "Patient must co-sign as payer (rent payer)"
+            "Owner must co-sign as payer (rent payer)"
           ],
           "writable": true,
           "signer": true
@@ -112,44 +134,44 @@
           }
         },
         {
-          "name": "patient",
+          "name": "owner",
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  97,
-                  116,
-                  105,
-                  101,
+                  111,
+                  119,
                   110,
-                  116
+                  101,
+                  114
                 ]
               },
               {
                 "kind": "account",
-                "path": "patient.patient_pubkey",
-                "account": "Patient"
+                "path": "owner.owner_pubkey",
+                "account": "PropertyOwner"
               }
             ]
           }
         },
         {
-          "name": "patient_seq",
+          "name": "owner_doc_seq",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  97,
-                  116,
-                  105,
-                  101,
+                  111,
+                  119,
                   110,
-                  116,
+                  101,
+                  114,
+                  95,
+                  100,
+                  111,
+                  99,
                   95,
                   115,
                   101,
@@ -158,32 +180,30 @@
               },
               {
                 "kind": "account",
-                "path": "patient"
+                "path": "owner"
               }
             ]
           }
         },
         {
-          "name": "hospital",
+          "name": "notary",
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  104,
+                  110,
                   111,
-                  115,
-                  112,
-                  105,
                   116,
                   97,
-                  108
+                  114,
+                  121
                 ]
               },
               {
                 "kind": "account",
-                "path": "hospital.authority",
-                "account": "Hospital"
+                "path": "notary.authority",
+                "account": "Notary"
               }
             ]
           }
@@ -192,24 +212,26 @@
           "name": "grant_write"
         },
         {
-          "name": "record",
+          "name": "document",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  114,
-                  101,
-                  99,
+                  100,
                   111,
-                  114,
-                  100
+                  99,
+                  117,
+                  109,
+                  101,
+                  110,
+                  116
                 ]
               },
               {
                 "kind": "account",
-                "path": "patient"
+                "path": "owner"
               },
               {
                 "kind": "arg",
@@ -258,11 +280,11 @@
           "type": "bytes"
         },
         {
-          "name": "edek_for_patient",
+          "name": "edek_for_owner",
           "type": "bytes"
         },
         {
-          "name": "edek_for_hospital",
+          "name": "edek_for_notary",
           "type": "bytes"
         },
         {
@@ -274,7 +296,7 @@
           }
         },
         {
-          "name": "edek_patient_algo",
+          "name": "edek_owner_algo",
           "type": {
             "defined": {
               "name": "WrapAlgo"
@@ -282,7 +304,7 @@
           }
         },
         {
-          "name": "edek_hospital_algo",
+          "name": "edek_notary_algo",
           "type": {
             "defined": {
               "name": "WrapAlgo"
@@ -306,11 +328,19 @@
           }
         },
         {
-          "name": "hospital_name",
+          "name": "notary_name",
           "type": "string"
         },
         {
-          "name": "doctor_name",
+          "name": "document_type",
+          "type": "string"
+        },
+        {
+          "name": "property_ref",
+          "type": "string"
+        },
+        {
+          "name": "counterparty_name",
           "type": "string"
         }
       ]
@@ -352,25 +382,23 @@
           }
         },
         {
-          "name": "patient",
+          "name": "owner",
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  97,
-                  116,
-                  105,
-                  101,
+                  111,
+                  119,
                   110,
-                  116
+                  101,
+                  114
                 ]
               },
               {
                 "kind": "account",
-                "path": "patient.patient_pubkey",
-                "account": "Patient"
+                "path": "owner.owner_pubkey",
+                "account": "PropertyOwner"
               }
             ]
           }
@@ -383,7 +411,7 @@
           "name": "grantee"
         },
         {
-          "name": "trustee_account",
+          "name": "delegate_account",
           "optional": true
         },
         {
@@ -448,16 +476,16 @@
       ]
     },
     {
-      "name": "read_records",
+      "name": "read_documents",
       "discriminator": [
-        108,
-        247,
         96,
-        158,
-        174,
-        5,
-        60,
-        83
+        249,
+        237,
+        209,
+        185,
+        48,
+        7,
+        92
       ],
       "accounts": [
         {
@@ -483,68 +511,66 @@
           "signer": true
         },
         {
-          "name": "patient",
+          "name": "owner",
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  97,
-                  116,
-                  105,
-                  101,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "patient.patient_pubkey",
-                "account": "Patient"
-              }
-            ]
-          }
-        },
-        {
-          "name": "hospital",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  104,
                   111,
-                  115,
-                  112,
-                  105,
-                  116,
-                  97,
-                  108
+                  119,
+                  110,
+                  101,
+                  114
                 ]
               },
               {
                 "kind": "account",
-                "path": "hospital.authority",
-                "account": "Hospital"
+                "path": "owner.owner_pubkey",
+                "account": "PropertyOwner"
               }
             ]
           }
         },
         {
-          "name": "patient_seq",
+          "name": "notary",
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  97,
-                  116,
-                  105,
-                  101,
                   110,
+                  111,
                   116,
+                  97,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "notary.authority",
+                "account": "Notary"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner_doc_seq",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  119,
+                  110,
+                  101,
+                  114,
+                  95,
+                  100,
+                  111,
+                  99,
                   95,
                   115,
                   101,
@@ -553,7 +579,7 @@
               },
               {
                 "kind": "account",
-                "path": "patient"
+                "path": "owner"
               }
             ]
           }
@@ -562,23 +588,25 @@
           "name": "grant_read"
         },
         {
-          "name": "record",
+          "name": "document",
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  114,
-                  101,
-                  99,
+                  100,
                   111,
-                  114,
-                  100
+                  99,
+                  117,
+                  109,
+                  101,
+                  110,
+                  116
                 ]
               },
               {
                 "kind": "account",
-                "path": "patient"
+                "path": "owner"
               },
               {
                 "kind": "arg",
@@ -600,16 +628,16 @@
       ]
     },
     {
-      "name": "register_hospitals",
+      "name": "register_notaries",
       "discriminator": [
-        198,
-        253,
-        96,
-        130,
-        214,
-        114,
-        82,
-        136
+        205,
+        156,
+        179,
+        236,
+        175,
+        186,
+        106,
+        35
       ],
       "accounts": [
         {
@@ -636,29 +664,27 @@
           }
         },
         {
-          "name": "hospital_authority"
+          "name": "notary_authority"
         },
         {
-          "name": "hospital",
+          "name": "notary",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  104,
+                  110,
                   111,
-                  115,
-                  112,
-                  105,
                   116,
                   97,
-                  108
+                  114,
+                  121
                 ]
               },
               {
                 "kind": "account",
-                "path": "hospital_authority"
+                "path": "notary_authority"
               }
             ]
           }
@@ -680,6 +706,84 @@
       ]
     },
     {
+      "name": "revoke_delegate",
+      "discriminator": [
+        142,
+        66,
+        98,
+        126,
+        102,
+        60,
+        92,
+        163
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "owner",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  119,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner.owner_pubkey",
+                "account": "PropertyOwner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "delegate_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  108,
+                  101,
+                  103,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner.owner_pubkey",
+                "account": "PropertyOwner"
+              },
+              {
+                "kind": "account",
+                "path": "delegate_account.delegate",
+                "account": "Delegate"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "revoke_grant",
       "discriminator": [
         134,
@@ -693,25 +797,23 @@
       ],
       "accounts": [
         {
-          "name": "patient",
+          "name": "owner",
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  97,
-                  116,
-                  105,
-                  101,
+                  111,
+                  119,
                   110,
-                  116
+                  101,
+                  114
                 ]
               },
               {
                 "kind": "account",
-                "path": "patient.patient_pubkey",
-                "account": "Patient"
+                "path": "owner.owner_pubkey",
+                "account": "PropertyOwner"
               }
             ]
           }
@@ -726,85 +828,6 @@
         {
           "name": "authority",
           "signer": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "revoke_trustee",
-      "discriminator": [
-        100,
-        117,
-        208,
-        23,
-        86,
-        2,
-        222,
-        0
-      ],
-      "accounts": [
-        {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "patient",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112,
-                  97,
-                  116,
-                  105,
-                  101,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "patient.patient_pubkey",
-                "account": "Patient"
-              }
-            ]
-          }
-        },
-        {
-          "name": "trustee_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116,
-                  114,
-                  117,
-                  115,
-                  116,
-                  101,
-                  101
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "patient.patient_pubkey",
-                "account": "Patient"
-              },
-              {
-                "kind": "account",
-                "path": "trustee_account.trustee",
-                "account": "Trustee"
-              }
-            ]
-          }
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
         }
       ],
       "args": []
@@ -857,16 +880,16 @@
       ]
     },
     {
-      "name": "upsert_patient",
+      "name": "upsert_owner",
       "discriminator": [
-        247,
-        166,
-        68,
-        59,
-        109,
-        186,
-        139,
-        237
+        207,
+        120,
+        231,
+        25,
+        224,
+        15,
+        0,
+        51
       ],
       "accounts": [
         {
@@ -875,20 +898,18 @@
           "signer": true
         },
         {
-          "name": "patient",
+          "name": "owner",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  97,
-                  116,
-                  105,
-                  101,
+                  111,
+                  119,
                   110,
-                  116
+                  101,
+                  114
                 ]
               },
               {
@@ -899,20 +920,22 @@
           }
         },
         {
-          "name": "patient_seq",
+          "name": "owner_doc_seq",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  97,
-                  116,
-                  105,
-                  101,
+                  111,
+                  119,
                   110,
-                  116,
+                  101,
+                  114,
+                  95,
+                  100,
+                  111,
+                  99,
                   95,
                   115,
                   101,
@@ -921,7 +944,7 @@
               },
               {
                 "kind": "account",
-                "path": "patient"
+                "path": "owner"
               }
             ]
           }
@@ -933,7 +956,7 @@
       ],
       "args": [
         {
-          "name": "did",
+          "name": "owner_ref",
           "type": "string"
         }
       ]
@@ -954,6 +977,19 @@
       ]
     },
     {
+      "name": "Delegate",
+      "discriminator": [
+        92,
+        145,
+        166,
+        111,
+        11,
+        38,
+        38,
+        247
+      ]
+    },
+    {
       "name": "Grant",
       "discriminator": [
         161,
@@ -967,68 +1003,55 @@
       ]
     },
     {
-      "name": "Hospital",
+      "name": "Notary",
       "discriminator": [
-        150,
-        59,
-        177,
-        217,
-        93,
-        234,
-        181,
-        75
-      ]
-    },
-    {
-      "name": "Patient",
-      "discriminator": [
-        118,
-        127,
-        39,
-        235,
-        201,
-        189,
+        111,
+        38,
+        1,
+        164,
+        168,
+        121,
         0,
-        109
+        25
       ]
     },
     {
-      "name": "PatientSeq",
+      "name": "OwnerDocumentSeq",
       "discriminator": [
-        12,
-        231,
-        74,
-        127,
-        83,
+        188,
+        128,
+        184,
+        144,
+        199,
+        184,
+        98,
+        123
+      ]
+    },
+    {
+      "name": "PropertyDocument",
+      "discriminator": [
+        82,
+        157,
         96,
-        204,
-        196
+        47,
+        13,
+        188,
+        243,
+        248
       ]
     },
     {
-      "name": "Record",
+      "name": "PropertyOwner",
       "discriminator": [
-        254,
-        233,
-        117,
-        252,
-        76,
-        166,
-        146,
-        139
-      ]
-    },
-    {
-      "name": "Trustee",
-      "discriminator": [
-        206,
-        26,
-        220,
-        171,
-        26,
-        39,
+        155,
+        198,
         92,
-        219
+        222,
+        72,
+        94,
+        39,
+        74
       ]
     }
   ],
@@ -1044,6 +1067,71 @@
         167,
         178,
         91
+      ]
+    },
+    {
+      "name": "DelegateAdded",
+      "discriminator": [
+        96,
+        159,
+        58,
+        144,
+        26,
+        171,
+        141,
+        70
+      ]
+    },
+    {
+      "name": "DelegateGrantCreated",
+      "discriminator": [
+        24,
+        90,
+        230,
+        188,
+        107,
+        49,
+        23,
+        150
+      ]
+    },
+    {
+      "name": "DelegateRevoked",
+      "discriminator": [
+        10,
+        200,
+        133,
+        29,
+        238,
+        207,
+        193,
+        124
+      ]
+    },
+    {
+      "name": "DocumentCreated",
+      "discriminator": [
+        175,
+        15,
+        21,
+        224,
+        105,
+        104,
+        6,
+        210
+      ]
+    },
+    {
+      "name": "DocumentRead",
+      "discriminator": [
+        188,
+        121,
+        46,
+        25,
+        168,
+        202,
+        190,
+        85
       ]
     },
     {
@@ -1086,29 +1174,29 @@
       ]
     },
     {
-      "name": "HospitalRegistered",
+      "name": "NotaryRegistered",
       "discriminator": [
-        30,
-        237,
-        93,
-        45,
-        22,
-        53,
-        110,
-        63
+        90,
+        104,
+        133,
+        63,
+        196,
+        123,
+        88,
+        42
       ]
     },
     {
-      "name": "PatientUpserted",
+      "name": "OwnerUpserted",
       "discriminator": [
-        248,
-        249,
-        31,
-        144,
-        11,
-        214,
-        217,
-        3
+        135,
+        33,
+        51,
+        142,
+        195,
+        233,
+        246,
+        12
       ]
     },
     {
@@ -1123,98 +1211,38 @@
         76,
         224
       ]
-    },
-    {
-      "name": "RecordCreated",
-      "discriminator": [
-        7,
-        2,
-        32,
-        66,
-        135,
-        168,
-        104,
-        225
-      ]
-    },
-    {
-      "name": "RecordRead",
-      "discriminator": [
-        121,
-        247,
-        133,
-        128,
-        199,
-        34,
-        198,
-        82
-      ]
-    },
-    {
-      "name": "TrusteeAdded",
-      "discriminator": [
-        180,
-        150,
-        32,
-        246,
-        213,
-        96,
-        119,
-        55
-      ]
-    },
-    {
-      "name": "TrusteeGrantCreated",
-      "discriminator": [
-        215,
-        177,
-        179,
-        48,
-        139,
-        43,
-        228,
-        189
-      ]
-    },
-    {
-      "name": "TrusteeRevoked",
-      "discriminator": [
-        50,
-        243,
-        213,
-        201,
-        19,
-        73,
-        96,
-        252
-      ]
     }
   ],
   "errors": [
     {
       "code": 6000,
-      "name": "AlreadyInitialized",
-      "msg": "Config already initialized"
+      "name": "AlreadyRevoked",
+      "msg": "Delegate is already revoked"
     },
     {
       "code": 6001,
-      "name": "EmptyKmsNamespace",
-      "msg": "KMS namespace is empty"
+      "name": "Unauthorized",
+      "msg": "Unauthorized action: only owner can modify delegates"
     },
     {
       "code": 6002,
-      "name": "KmsNamespaceTooLong",
-      "msg": "KMS namespace too long"
+      "name": "NotFound",
+      "msg": "Delegate not found"
     },
     {
       "code": 6003,
-      "name": "Paused",
-      "msg": "Program is paused; action not allowed"
+      "name": "Revoked",
+      "msg": "Delegate is revoked"
     },
     {
       "code": 6004,
-      "name": "UnauthorizedPauseAction",
-      "msg": "Only config authority may pause/unpause the program"
+      "name": "ReadOnly",
+      "msg": "Delegate can only issue READ access"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidScope",
+      "msg": "Invalid scope for delegate"
     }
   ],
   "types": [
@@ -1267,6 +1295,187 @@
       }
     },
     {
+      "name": "Delegate",
+      "docs": [
+        "PDA: [SEED_DELEGATE, owner, delegate]"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "delegate",
+            "type": "pubkey"
+          },
+          {
+            "name": "added_by",
+            "type": "pubkey"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "revoked",
+            "type": "bool"
+          },
+          {
+            "name": "revoked_at",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DelegateAdded",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "delegate",
+            "type": "pubkey"
+          },
+          {
+            "name": "added_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DelegateGrantCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "grant",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "grantee",
+            "type": "pubkey"
+          },
+          {
+            "name": "delegate",
+            "type": "pubkey"
+          },
+          {
+            "name": "scope",
+            "type": "u8"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DelegateRevoked",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "delegate_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "delegate",
+            "type": "pubkey"
+          },
+          {
+            "name": "revoked_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DocumentCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "document",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "notary",
+            "type": "pubkey"
+          },
+          {
+            "name": "uploader",
+            "type": "pubkey"
+          },
+          {
+            "name": "seq",
+            "type": "u64"
+          },
+          {
+            "name": "enc_version",
+            "type": "u16"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DocumentRead",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "document",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "notary",
+            "type": "pubkey"
+          },
+          {
+            "name": "reader",
+            "type": "pubkey"
+          },
+          {
+            "name": "seq",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
       "name": "EncAlgo",
       "type": {
         "kind": "enum",
@@ -1287,13 +1496,13 @@
       "name": "Grant",
       "docs": [
         "Grant (Per-Grantee)",
-        "PDA: [SEED_GRANT, patient, grantee, scope_byte]"
+        "PDA: [SEED_GRANT, owner, grantee, scope_byte]"
       ],
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "patient",
+            "name": "owner",
             "type": "pubkey"
           },
           {
@@ -1313,7 +1522,7 @@
             "type": "i64"
           },
           {
-            "name": "via_trustee",
+            "name": "via_delegate",
             "type": "bool"
           },
           {
@@ -1343,7 +1552,7 @@
             "type": "pubkey"
           },
           {
-            "name": "patient",
+            "name": "owner",
             "type": "pubkey"
           },
           {
@@ -1375,7 +1584,7 @@
             "type": "pubkey"
           },
           {
-            "name": "patient",
+            "name": "owner",
             "type": "pubkey"
           },
           {
@@ -1403,7 +1612,7 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "patient",
+            "name": "owner",
             "type": "pubkey"
           },
           {
@@ -1418,10 +1627,10 @@
       }
     },
     {
-      "name": "Hospital",
+      "name": "Notary",
       "docs": [
-        "Hospital",
-        "PDA: [SEED_HOSPITAL, hospital_authority]"
+        "Registered notary or verification office.",
+        "PDA: [SEED_NOTARY, notary_authority]"
       ],
       "type": {
         "kind": "struct",
@@ -1454,16 +1663,16 @@
       }
     },
     {
-      "name": "HospitalRegistered",
+      "name": "NotaryRegistered",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "hospital",
+            "name": "notary",
             "type": "pubkey"
           },
           {
-            "name": "hospital_authority",
+            "name": "notary_authority",
             "type": "pubkey"
           },
           {
@@ -1486,43 +1695,15 @@
       }
     },
     {
-      "name": "Patient",
+      "name": "OwnerDocumentSeq",
       "docs": [
-        "Patient",
-        "PDA: [SEED_PATIENT, patient_pubkey]"
+        "PDA: [SEED_OWNER_DOC_SEQ, owner]"
       ],
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "patient_pubkey",
-            "type": "pubkey"
-          },
-          {
-            "name": "did",
-            "type": "string"
-          },
-          {
-            "name": "created_at",
-            "type": "i64"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "PatientSeq",
-      "docs": [
-        "PDA: [SEED_PATIENT_SEQ, patient]"
-      ],
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "patient",
+            "name": "owner",
             "type": "pubkey"
           },
           {
@@ -1537,16 +1718,16 @@
       }
     },
     {
-      "name": "PatientUpserted",
+      "name": "OwnerUpserted",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "patient",
+            "name": "owner",
             "type": "pubkey"
           },
           {
-            "name": "patient_pubkey",
+            "name": "owner_pubkey",
             "type": "pubkey"
           },
           {
@@ -1585,20 +1766,20 @@
       }
     },
     {
-      "name": "Record",
+      "name": "PropertyDocument",
       "docs": [
-        "Record",
-        "PDA: [SEED_RECORD, patient, seq_le_bytes]"
+        "Immutable property document metadata.",
+        "PDA: [SEED_DOCUMENT, owner, seq_le_bytes]"
       ],
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "patient",
+            "name": "owner",
             "type": "pubkey"
           },
           {
-            "name": "hospital",
+            "name": "notary",
             "type": "pubkey"
           },
           {
@@ -1635,11 +1816,11 @@
             "type": "bytes"
           },
           {
-            "name": "edek_for_patient",
+            "name": "edek_for_owner",
             "type": "bytes"
           },
           {
-            "name": "edek_for_hospital",
+            "name": "edek_for_notary",
             "type": "bytes"
           },
           {
@@ -1651,7 +1832,7 @@
             }
           },
           {
-            "name": "edek_patient_algo",
+            "name": "edek_owner_algo",
             "type": {
               "defined": {
                 "name": "WrapAlgo"
@@ -1659,7 +1840,7 @@
             }
           },
           {
-            "name": "edek_hospital_algo",
+            "name": "edek_notary_algo",
             "type": {
               "defined": {
                 "name": "WrapAlgo"
@@ -1699,207 +1880,62 @@
             "type": "u8"
           },
           {
-            "name": "patient_pubkey",
+            "name": "owner_pubkey",
             "docs": [
-              "The patient's main wallet pubkey (denormalized from Patient account)"
+              "The owner's main wallet pubkey (denormalized from PropertyOwner account)"
             ],
             "type": "pubkey"
           },
           {
-            "name": "hospital_pubkey",
+            "name": "notary_pubkey",
             "docs": [
-              "The hospital's authority pubkey (denormalized from Hospital account)"
+              "The notary's authority pubkey (denormalized from Notary account)"
             ],
             "type": "pubkey"
           },
           {
-            "name": "hospital_name",
+            "name": "notary_name",
             "type": "string"
           },
           {
-            "name": "doctor_name",
+            "name": "document_type",
+            "type": "string"
+          },
+          {
+            "name": "property_ref",
+            "type": "string"
+          },
+          {
+            "name": "counterparty_name",
             "type": "string"
           }
         ]
       }
     },
     {
-      "name": "RecordCreated",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "record",
-            "type": "pubkey"
-          },
-          {
-            "name": "patient",
-            "type": "pubkey"
-          },
-          {
-            "name": "hospital",
-            "type": "pubkey"
-          },
-          {
-            "name": "uploader",
-            "type": "pubkey"
-          },
-          {
-            "name": "seq",
-            "type": "u64"
-          },
-          {
-            "name": "enc_version",
-            "type": "u16"
-          },
-          {
-            "name": "created_at",
-            "type": "i64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "RecordRead",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "record",
-            "type": "pubkey"
-          },
-          {
-            "name": "patient",
-            "type": "pubkey"
-          },
-          {
-            "name": "hospital",
-            "type": "pubkey"
-          },
-          {
-            "name": "reader",
-            "type": "pubkey"
-          },
-          {
-            "name": "seq",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "Trustee",
+      "name": "PropertyOwner",
       "docs": [
-        "PDA: [b\"trustee\", patient, trustee]"
+        "Property owner profile.",
+        "PDA: [SEED_OWNER, owner_pubkey]"
       ],
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "patient",
+            "name": "owner_pubkey",
             "type": "pubkey"
           },
           {
-            "name": "trustee",
-            "type": "pubkey"
-          },
-          {
-            "name": "added_by",
-            "type": "pubkey"
+            "name": "owner_ref",
+            "type": "string"
           },
           {
             "name": "created_at",
             "type": "i64"
-          },
-          {
-            "name": "revoked",
-            "type": "bool"
-          },
-          {
-            "name": "revoked_at",
-            "type": {
-              "option": "i64"
-            }
           },
           {
             "name": "bump",
             "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TrusteeAdded",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "patient",
-            "type": "pubkey"
-          },
-          {
-            "name": "trustee",
-            "type": "pubkey"
-          },
-          {
-            "name": "added_at",
-            "type": "i64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TrusteeGrantCreated",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "grant",
-            "type": "pubkey"
-          },
-          {
-            "name": "patient",
-            "type": "pubkey"
-          },
-          {
-            "name": "grantee",
-            "type": "pubkey"
-          },
-          {
-            "name": "trustee",
-            "type": "pubkey"
-          },
-          {
-            "name": "scope",
-            "type": "u8"
-          },
-          {
-            "name": "created_at",
-            "type": "i64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TrusteeRevoked",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "trustee_account",
-            "type": "pubkey"
-          },
-          {
-            "name": "patient",
-            "type": "pubkey"
-          },
-          {
-            "name": "trustee",
-            "type": "pubkey"
-          },
-          {
-            "name": "revoked_at",
-            "type": "i64"
           }
         ]
       }
